@@ -26,7 +26,7 @@ public class Order implements Serializable {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
-	private Integer orderStatus;
+	private Integer orderStatus; // para armazenar no banco como inteiro
 
 	@ManyToOne // indica que o relacionamento entre as entidades é de muitos para um, ou seja,
 				// muitas instâncias da entidade que
@@ -40,8 +40,9 @@ public class Order implements Serializable {
 
 	}
 
-	public Order(Instant moment, OrderStatus orderStatus, User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		super();
+		this.id = id;
 		this.moment = moment;
 		setOrderStatus(orderStatus);
 		this.client = client;
