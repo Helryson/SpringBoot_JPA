@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,8 @@ public class Order implements Serializable{
 	@Id //anotação JPA
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //anotação JPA
 	private Long id;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	
 	@ManyToOne //indica que o relacionamento entre as entidades é de muitos para um, ou seja, muitas instâncias da entidade que 
@@ -32,9 +36,8 @@ public class Order implements Serializable{
 		
 	}
 
-	public Order(Long id, Instant moment, User client) {
+	public Order( Instant moment, User client) {
 		super();
-		this.id = id;
 		this.moment = moment;
 		this.client = client;
 	}
