@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity //anotação JPA
 @Table(name = "tb_user") //anotação JPA
-public class User implements Serializable{
+public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id //anotação JPA
