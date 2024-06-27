@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,22 +22,23 @@ import jakarta.persistence.Table;
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id //anotação JPA
-	@GeneratedValue(strategy = GenerationType.IDENTITY) //anotação JPA
+	@Id // anotação JPA
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // anotação JPA
 	private Long id;
 	private String name;
 	private String description;
 	private Double price;
 	private String imgUrl;
-	
-	@JsonIgnore
+
 	@ManyToMany
-	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), 
-	inverseJoinColumns = @JoinColumn(name = "category_id"))
+	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories = new HashSet<>();
-	
+
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> items = new HashSet<>();
+
 	public Product() {
-		
+
 	}
 
 	public Product(Long id, String name, String description, Double price, String imgUrl) {
@@ -91,13 +93,21 @@ public class Product implements Serializable {
 	public Set<Category> getCategories() {
 		return categories;
 	}
-	
+
 	public void addCategory(Category category) {
 		getCategories().add(category);
 	}
-	
+
 	public void removeCategory(Category category) {
 		getCategories().remove(category);
+	}
+
+	public Set<Order> getOrders() {
+		Set<Order> set = new HashSet<>();
+		for (OrderItem x : items) {
+			set.add(x.getOrder());
+		}
+		return set;
 	}
 
 	@Override
@@ -116,5 +126,5 @@ public class Product implements Serializable {
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
