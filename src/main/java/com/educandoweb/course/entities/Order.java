@@ -32,9 +32,6 @@ public class Order implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	private Integer orderStatus; // para armazenar no banco como inteiro
-	
-	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-	private Payment payment;
 
 	@ManyToOne // indica que o relacionamento entre as entidades é de muitos para um, ou seja,
 				// muitas instâncias da entidade que
@@ -46,6 +43,9 @@ public class Order implements Serializable {
 	
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
+	
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	private Payment payment;
 
 	public Order() {
 
@@ -103,6 +103,15 @@ public class Order implements Serializable {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+	
+	public Double getTotal() {
+		Double total = 0.0;
+		for(OrderItem y : getItems()) {
+			total += y.getSubTotal();
+		}
+		
+		return total;
 	}
 
 	@Override
